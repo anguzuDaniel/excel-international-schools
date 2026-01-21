@@ -1,0 +1,369 @@
+[
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "subtitle",
+        "type": "string"
+      },
+      {
+        "name": "text",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array"
+      }
+    ],
+    "name": "hero",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "dateFormat": "YYYY-MM-DD",
+          "timeFormat": "HH:mm",
+          "calendarTodayLabel": "Today"
+        },
+        "readOnly": true,
+        "name": "submittedAt",
+        "type": "datetime",
+        "title": "Application Time"
+      },
+      {
+        "name": "studentName",
+        "type": "string"
+      },
+      {
+        "name": "branch",
+        "type": "string",
+        "title": "Campus Branch"
+      },
+      {
+        "name": "dob",
+        "type": "date",
+        "title": "Date of Birth"
+      },
+      {
+        "name": "gender",
+        "type": "string"
+      },
+      {
+        "name": "level",
+        "type": "string",
+        "title": "Level Applying For"
+      },
+      {
+        "name": "parentName",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "name": "phone",
+        "type": "string"
+      },
+      {
+        "name": "address",
+        "type": "string"
+      },
+      {
+        "initialValue": "pending",
+        "options": {
+          "list": [
+            "pending",
+            "reviewed",
+            "accepted",
+            "rejected"
+          ]
+        },
+        "name": "status",
+        "type": "string",
+        "title": "Application Status"
+      }
+    ],
+    "name": "application",
+    "type": "document",
+    "title": "Admissions Applications"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "description": "The main text for the about section",
+        "name": "content",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "About Image"
+      }
+    ],
+    "name": "about",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "label",
+                "type": "string",
+                "title": "Label (e.g. Students)"
+              },
+              {
+                "name": "value",
+                "type": "string",
+                "title": "Value (e.g. 1500+)"
+              },
+              {
+                "name": "icon",
+                "type": "string",
+                "title": "Icon Emoji (e.g. 🎓)"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "statItems",
+        "type": "array",
+        "title": "Statistic Items"
+      }
+    ],
+    "name": "stats",
+    "type": "document",
+    "title": "School Statistics"
+  },
+  {
+    "fields": [
+      {
+        "initialValue": "Our Curriculum",
+        "name": "title",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "description": "A brief overview of the academic programs offered.",
+        "name": "description",
+        "type": "text",
+        "title": "General Description"
+      },
+      {
+        "description": "Add levels like O-Level, A-Level, etc.",
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "title",
+                "type": "string",
+                "title": "Level Name (e.g., O-Level)"
+              },
+              {
+                "name": "details",
+                "type": "text",
+                "title": "Details/Subjects"
+              },
+              {
+                "options": {
+                  "hotspot": true
+                },
+                "name": "image",
+                "type": "image",
+                "title": "Icon or Image"
+              }
+            ],
+            "type": "object",
+            "name": "level"
+          }
+        ],
+        "name": "levels",
+        "type": "array",
+        "title": "Education Levels"
+      }
+    ],
+    "name": "curriculum",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "of": [
+          {
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array"
+      }
+    ],
+    "name": "gallery",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "text"
+      }
+    ],
+    "name": "section",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "mission",
+        "type": "text",
+        "title": "Mission Statement"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "vision",
+        "type": "text",
+        "title": "Vision Statement"
+      }
+    ],
+    "name": "missionVision",
+    "type": "document",
+    "title": "Mission & Vision"
+  },
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "role",
+        "type": "string"
+      },
+      {
+        "name": "message",
+        "type": "text"
+      },
+      {
+        "name": "image",
+        "type": "image"
+      }
+    ],
+    "name": "adminMessage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "description": "Add details for each school campus/location",
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "campusName",
+                "type": "string",
+                "title": "Campus Name (e.g. Main Campus)"
+              },
+              {
+                "name": "address",
+                "type": "string",
+                "title": "Physical Address"
+              },
+              {
+                "name": "email",
+                "type": "string",
+                "title": "Contact Email"
+              },
+              {
+                "of": [
+                  {
+                    "type": "string"
+                  }
+                ],
+                "name": "phoneNumbers",
+                "type": "array"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "mapUrl",
+                "type": "url",
+                "title": "Google Maps Embed URL"
+              }
+            ],
+            "type": "object",
+            "name": "location"
+          }
+        ],
+        "name": "locations",
+        "type": "array",
+        "title": "School Campuses"
+      }
+    ],
+    "name": "contact",
+    "type": "document",
+    "title": "School Locations"
+  }
+]

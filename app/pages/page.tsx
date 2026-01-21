@@ -63,6 +63,8 @@ export default async function HomePage() {
 const data = await client.fetch(query);
   const { hero, about, curriculum, stats, missionVision, adminMessages, contact } = data;
 
+  console.log("Hero: ", hero);
+
   return (
     <div className="bg-slate-50 min-h-screen">
       <Header />

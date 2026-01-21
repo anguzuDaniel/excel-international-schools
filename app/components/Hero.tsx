@@ -1,6 +1,7 @@
 "use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 interface HeroProps {
@@ -72,12 +73,20 @@ export default function Hero({
                 </h2>
 
                 <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl shadow-blue-500/20 active:scale-95">
-                        Enroll Now
+                {/* Primary Action: Link to Apply Page */}
+                <Link href="/apply">
+                    <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full font-bold transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2">
+                    Begin Application
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="out 17l5-5-5-5M19 12H5" />
+                    </svg>
                     </button>
-                    <button className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/30 px-8 py-4 rounded-full font-bold transition-all active:scale-95">
-                        Virtual Tour
-                    </button>
+                </Link>
+
+                {/* Secondary Action: Virtual Tour */}
+                <button className="bg-white/10 backdrop-blur-md hover:bg-white/20 text-white border border-white/30 px-10 py-4 rounded-full font-bold transition-all active:scale-95">
+                    Virtual Tour
+                </button>
                 </div>
             </div>
 
