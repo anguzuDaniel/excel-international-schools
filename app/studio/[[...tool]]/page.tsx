@@ -12,7 +12,19 @@ import config from '../../../sanity.config'
 
 export const dynamic = 'force-static'
 
-export { metadata, viewport } from 'next-sanity/studio'
+// export { metadata, viewport } from 'next-sanity/studio'
+
+// 2. Add these manual definitions instead
+export const metadata = {
+  title: 'Sanity Studio',
+  robots: { index: false }, // Keeps the studio out of Google search
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
 
 export default function StudioPage() {
   return <NextStudio config={config} />
