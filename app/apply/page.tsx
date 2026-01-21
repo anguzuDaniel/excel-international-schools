@@ -2,6 +2,7 @@ import { client } from '@/sanity/lib/client';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ApplicationForm from '../components/ApplicationForm';
+import SubPageLayout from '../components/SubPageLayout';
 
 export default async function ApplyPage() {
   // We fetch the Hero title for the school name and Contact for branch locations
@@ -16,23 +17,17 @@ export default async function ApplyPage() {
           phoneNumbers,
           mapUrl // <--- THIS IS THE KEY
         }
-      }
+      },
+    "aboutData": *[_type == "aboutPage"][0],
   }`;
   
   const data = await client.fetch(query);
 
-  // Use the Hero title as the school name
-  const schoolName = data.hero?.title || "Our School";
-  const branches = data.contact?.locations || [];
+    const { hero, contact, aboutData } = data;
 
   return (
-    <div className="bg-slate-50 min-h-screen flex flex-col">
-      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <Header />
-      </div>
-
-      <main className="flex-grow pt-20 pb-20 px-6">
-        <div className="max-w-7xl mx-auto">
+    <SubPageLayout title="Admission Application" subtitle={`Official enrollment portal for ${hero.title}`} heroImage={aboutData.hero?.backgroundImage} logo={hero.logo}>
+                <div className="pb-24 px-6 max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-12">
             
             {/* LEFT SIDE: DYNAMIC SIDEBAR */}
@@ -42,7 +37,7 @@ export default async function ApplyPage() {
                   Start the Journey — Apply Online
                 </h2>
                 <p className="text-blue-100 text-sm mb-8 leading-relaxed">
-                  Take your first step to becoming part of the cohort of innovators and leaders at <span className="font-bold underline decoration-blue-400">{schoolName}</span>.
+                  Take your first step to becoming part of the cohort of innovators and leaders at <span className="font-bold underline decoration-blue-400">{hero.title}</span>.
                 </p>
                 
                 <div className="space-y-6">
@@ -56,25 +51,13 @@ export default async function ApplyPage() {
 
             {/* RIGHT SIDE: THE FORM */}
             <div className="flex-1">
-              <div className="mb-8">
-                <h1 className="text-4xl font-black text-slate-900 tracking-tighter">
-                  Admission <span className="text-blue-600">Application</span>
-                </h1>
-                <p className="text-slate-500 mt-2 italic text-sm">
-                  Official enrollment portal for {schoolName}
-                </p>
-              </div>
-
               {/* Form receives the dynamic branch list and name */}
-              <ApplicationForm schoolName={schoolName} locations={data.contact?.locations} />
+              <ApplicationForm schoolName={hero.schoolName} locations={data.contact?.locations} />
             </div>
 
           </div>
         </div>
-      </main>
-
-      <Footer contact={data.contact} />
-    </div>
+    </SubPageLayout>
   );
 }
 

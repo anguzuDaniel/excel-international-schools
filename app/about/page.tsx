@@ -4,21 +4,27 @@ import { PortableText } from '@portabletext/react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Image from 'next/image';
+import SubPageLayout from '../components/SubPageLayout';
+import MissionAndVision from '../components/MissionAndVision';
 
 export default async function AboutPage() {
   // We fetch both the about page content and contact info for the footer
   const query = `{
+    "hero": *[_type == "hero"][0],
     "aboutData": *[_type == "aboutPage"][0],
+    "missionVision": *[_type == "missionVision"][0],
     "contact": *[_type == "contact"][0]
   }`;
   
-  const { aboutData, contact } = await client.fetch(query);
+  const { hero, aboutData, missionVision, contact } = await client.fetch(query);
+
+  console.log(aboutData);
 
   // SAFEGUARD: If the document is not found, show a helpful message instead of crashing
   if (!aboutData) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Header />
+        <Header schoolName={hero.title} logo={hero.logo} />
         <div className="flex-1 flex items-center justify-center bg-slate-50">
           <div className="text-center p-10 bg-white rounded-3xl shadow-sm border border-slate-200">
             <h2 className="text-2xl font-bold text-slate-900">Content Coming Soon</h2>
@@ -31,33 +37,9 @@ export default async function AboutPage() {
   }
 
   return (
-    <div className="bg-white min-h-screen flex flex-col">
-      <Header />
-
-      <main className="flex-grow">
-        {/* 1. HERO SECTION */}
-        <section className="relative h-[65vh] flex items-center justify-center bg-slate-900 overflow-hidden">
-          {aboutData.hero?.backgroundImage && (
-            <Image 
-              src={urlFor(aboutData.hero.backgroundImage).url()} 
-              alt="Hero Background"
-              fill
-              priority
-              className="object-cover opacity-60"
-            />
-          )}
-          <div className="relative z-10 max-w-5xl text-center px-6">
-            <h1 className="text-4xl md:text-7xl font-black text-white leading-tight mb-6 tracking-tight">
-              {aboutData.hero?.heading || "Who We Are"}
-            </h1>
-            <p className="text-xl text-blue-100 font-medium max-w-2xl mx-auto leading-relaxed">
-              {aboutData.hero?.subheading}
-            </p>
-          </div>
-        </section>
-
+    <SubPageLayout title={aboutData.hero?.subheading} subtitle={aboutData.subtitle} heroImage={aboutData.hero?.backgroundImage} logo={hero.logo}>
         {/* 2. OUR STORY SECTION (Nova Pioneer Style) */}
-        <section className="py-24 px-6 max-w-7xl mx-auto">
+        <section className="pb-24 px-6 max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             {/* Image Column */}
             <div className="relative h-[400px] md:h-[600px] rounded-[3rem] overflow-hidden shadow-2xl">
@@ -80,10 +62,7 @@ export default async function AboutPage() {
               <div className="inline-block px-4 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-bold uppercase tracking-widest">
                 Our Origin
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
-                {aboutData.story?.title || "Reimagining Education"}
-              </h2>
-              <div className="prose prose-lg prose-slate max-w-none prose-p:leading-relaxed prose-p:text-slate-600">
+              <div className="prose prose-lg prose-slate max-w-none prose-p:leading-relaxed prose-p:text-slate-600 text-slate-500">
                 {aboutData.story?.content && (
                   <PortableText value={aboutData.story.content} />
                 )}
@@ -92,8 +71,14 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* 3. THE 3 Cs / CORE PILLARS */}
         <section className="py-24 bg-slate-50 px-6">
+            <div className='max-w-7xl mx-auto'>
+                <MissionAndVision mission={missionVision?.mission} vision={missionVision?.vision} />
+            </div>
+        </section>
+
+        {/* 3. THE 3 Cs / CORE PILLARS */}
+        <section className="py-24 px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-black text-slate-900 tracking-tight">The Core Pillars</h2>
@@ -122,9 +107,6 @@ export default async function AboutPage() {
             </div>
           </div>
         </section>
-      </main>
-
-      <Footer contact={contact} />
-    </div>
+    </SubPageLayout>
   );
 }

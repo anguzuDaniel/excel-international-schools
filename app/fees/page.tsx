@@ -1,30 +1,26 @@
 import { client } from '@/sanity/lib/client';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Image from 'next/image';
+import { urlFor } from '@/sanity/lib/image';
+import SubPageLayout from '../components/SubPageLayout';
 
 export default async function FeesPage() {
   const query = `{
+    "hero": *[_type == "hero"][0],
     "fees": *[_type == "fees"] | order(gradeLevel asc) {
       ...,
       "pdfUrl": pdfDownload.asset->url
     },
+    "aboutData": *[_type == "aboutPage"][0],
     "contact": *[_type == "contact"][0]
   }`;
   
-  const { fees, contact } = await client.fetch(query);
+  const { hero, fees, aboutData, contact } = await client.fetch(query);
 
   return (
-    <div className="bg-white min-h-screen flex flex-col">
-      <div className="sticky top-0 z-50 bg-white border-b border-slate-100">
-        <Header />
-      </div>
-
-      <main className="max-w-4xl mx-auto py-16 px-6 w-full">
-        <div className="mb-12 border-l-4 border-blue-600 pl-6">
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Fees Structure</h1>
-          <p className="text-slate-500 mt-2">Academic Year 2026</p>
-        </div>
-
+    <SubPageLayout title="Fees Structure" subtitle="Academic Year 2026" heroImage={aboutData.hero?.backgroundImage} logo={hero.logo}>
+      <section className="pb-24 px-6 max-w-7xl mx-auto">
         <div className="space-y-4">
           {fees.map((item: any) => (
             <div 
@@ -62,7 +58,7 @@ export default async function FeesPage() {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
-                    PDF
+                    DOWNLOAD PDF
                   </a>
                 )}
 
@@ -91,9 +87,8 @@ export default async function FeesPage() {
               Caution fees are refundable upon completion or withdrawal, provided all school property is returned in good condition.
             </p>
           </div>
-        </div>      
-        </main>
-      <Footer contact={contact} />
-    </div>
+        </div> 
+      </section>
+    </SubPageLayout>
   );
 }

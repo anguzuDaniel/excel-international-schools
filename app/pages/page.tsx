@@ -11,6 +11,7 @@ import { urlFor } from '@/sanity/lib/image';
 import { client } from '@/sanity/lib/client';
 import contact from '@/sanity/schemaTypes/contact';
 import Curriculum from '../components/Curriculum';
+import MissionAndVision from '../components/MissionAndVision';
 
 interface HomePageProps {
   hero?: SanityHero | null;
@@ -40,7 +41,7 @@ interface SanityAdminMessage {
   image?: any;
 }
 
-export default async function HomePage() {
+export default async function App() {
   const query = `{
     "hero": *[_type == "hero"][0],
     "about": *[_type == "about"][0],
@@ -50,7 +51,13 @@ export default async function HomePage() {
     },
     "stats": *[_type == "stats"][0],
     "missionVision": *[_type == "missionVision"][0],
-    "adminMessages": *[_type == "adminMessage"] | order(_createdAt asc),
+    "adminMessages": *[_type == "adminMessage"] | order(_createdAt asc) {
+        _id,
+        name,
+        role,
+        message,
+        image // Make sure this is explicitly included
+      },
     "contact": *[_type == "contact"][0]{
         _id,
         locations[]{
@@ -66,11 +73,11 @@ export default async function HomePage() {
   const data = await client.fetch(query);
   const { hero, about, curriculum, stats, missionVision, gallery, adminMessages, contact } = data;
 
-  console.log("Gallery: ", gallery);
+  console.log("Admin Meassages: ", adminMessages);
 
   return (
     <div className="bg-slate-50 min-h-screen">
-      <Header />
+      <Header schoolName={hero.title} logo={hero?.logo} />
 
       <main>
         {/* FULL WIDTH: Hero */}
@@ -94,27 +101,7 @@ export default async function HomePage() {
           </Section>
 
           {/* Mission & Vision Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-all">
-              <div className="flex items-center mb-4">
-                <span className="p-3 bg-blue-50 rounded-2xl text-2xl mr-4">🎯</span>
-                <h3 className="text-2xl font-bold text-slate-900">Our Mission</h3>
-              </div>
-              <p className="text-slate-600 leading-relaxed italic text-lg">
-                "{missionVision?.mission}"
-              </p>
-            </div>
-
-            <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-all">
-              <div className="flex items-center mb-4">
-                <span className="p-3 bg-amber-50 rounded-2xl text-2xl mr-4">👁️</span>
-                <h3 className="text-2xl font-bold text-slate-900">Our Vision</h3>
-              </div>
-              <p className="text-slate-600 leading-relaxed italic text-lg">
-                "{missionVision?.vision}"
-              </p>
-            </div>
-          </div>
+          <MissionAndVision mission={missionVision?.mission} vision={missionVision?.vision} />
         </div>
 
         {/* FULL WIDTH: Statistics (Breaking the container for visual impact) */}
@@ -139,7 +126,8 @@ export default async function HomePage() {
                   name={msg.name}
                   role={msg.role}
                   message={msg.message}
-                  image={msg.image ? urlFor(msg.image).url() : '/images/default-admin.jpg'}
+                  // This check ensures we only call urlFor if there is an actual asset
+                  image={msg.image?.asset ? urlFor(msg.image).url() : '/images/default-admin.jpg'}
                 />
               ))}
             </AdminMessageSectionGrid>

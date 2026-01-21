@@ -51,7 +51,7 @@ export default function Hero({
             ))}
 
             {/* Advanced Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-slate-950" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-slate-950" />
 
             {/* Content */}
             <div className="relative z-10 px-6 max-w-4xl space-y-6">

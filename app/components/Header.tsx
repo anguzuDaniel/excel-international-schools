@@ -1,9 +1,11 @@
 "use client";
+import { client } from '@/sanity/lib/client';
+import { urlFor } from '@/sanity/lib/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { SCHOOL_NAME } from '../public/site';
 
-const Header: React.FC = () => {
+export default function Header({ schoolName, logo } : { schoolName: string; logo: string}) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -21,7 +23,7 @@ const Header: React.FC = () => {
     { label: 'About', href: '/about' },
     { label: 'Fees', href: '/fees' },
     // { label: 'E-Learning', href: '/e-learning' },
-    { label: 'Gallery', href: '/gallery' },
+    // { label: 'Gallery', href: '/gallery' },
   ];
 
   return (
@@ -33,15 +35,32 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto flex justify-between items-center px-6">
-        {/* Logo/School Name */}
-        <Link href="/" className="group">
-          <h1 className={`font-bold text-xl tracking-tighter transition-colors ${
-            scrolled ? 'text-slate-900' : 'text-white'
-          }`}>
-            {SCHOOL_NAME}
-            <span className="block h-0.5 w-0 group-hover:w-full bg-blue-600 transition-all duration-300"></span>
-          </h1>
-        </Link>
+        <div className="flex items-center group cursor-pointer">
+          {/* Logo Container */}
+          {logo && (
+            <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+              <img 
+                src={urlFor(logo).url()} 
+                alt={schoolName || "School Logo"} 
+                className="h-10 md:h-14 w-auto object-contain" 
+              />
+            </div>
+          )}
+
+          {/* School Name Container */}
+          <div className={`flex flex-col justify-center transition-colors duration-300 ${
+              logo ? 'ml-3 border-l border-slate-200 pl-3' : ''
+            }`}>
+              <span className={`text-lg md:text-xl font-black leading-tight tracking-tighter uppercase italic transition-colors duration-300 ${
+                scrolled ? 'text-slate-900' : 'text-white'
+              }`}>
+                {schoolName?.split(' ')[0] || "Excel"}
+              </span>
+              <span className="text-[10px] md:text-xs font-bold text-blue-600 uppercase tracking-[0.2em] leading-none">
+                {schoolName?.split(' ').slice(1).join(' ') || "International"}
+              </span>
+            </div>
+        </div>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-8">
@@ -59,7 +78,7 @@ const Header: React.FC = () => {
           
           {/* CTA Button */}
           <Link 
-            href="/contact" 
+            href="#contact" 
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20"
           >
             Contact Us
@@ -108,5 +127,3 @@ const Header: React.FC = () => {
     </header>
   );
 };
-
-export default Header;
