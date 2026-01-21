@@ -10,12 +10,14 @@ import stats from './stats'
 import contact from './contact'
 import application from './application'
 import fees from './fees'
+import aboutPage from './aboutPage'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     hero,
     application,
     about,
+    aboutPage,
     stats,
     curriculum,
     gallery,

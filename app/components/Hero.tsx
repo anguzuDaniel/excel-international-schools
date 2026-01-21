@@ -16,11 +16,7 @@ export default function Hero({
     title,
     subtitle,
     text,
-    images = [
-        '/images/school.jpg',
-        '/images/merryland.jpg',
-        '/images/340573285.jpg',
-    ],
+    images = [],
     interval = 6000, // Slightly longer for better readability
 }: HeroProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
