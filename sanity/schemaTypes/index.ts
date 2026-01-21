@@ -9,6 +9,7 @@ import curriculum from './curriculum'
 import stats from './stats'
 import contact from './contact'
 import application from './application'
+import fees from './fees'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -18,6 +19,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     stats,
     curriculum,
     gallery,
+    fees,
     section,
     missionVission,
     adminMessage,
