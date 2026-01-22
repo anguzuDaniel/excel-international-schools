@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createClient } from 'next-sanity'
 import { NextResponse } from 'next/server';
 
