@@ -157,7 +157,7 @@ const query = `{
         </div>
       </main>
 
-      <Footer contact={campuses}/>
+      <Footer campuses={campuses}/>
     </div>
   );
 }

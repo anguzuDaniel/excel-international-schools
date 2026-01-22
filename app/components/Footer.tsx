@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function Footer({ contact }: any) {
+export default function Footer({ campuses }: any) {
   return (
     <footer className="bg-slate-950 text-slate-400 mt-20">
       <div className="container mx-auto px-6 py-16">
@@ -36,7 +36,7 @@ export default function Footer({ contact }: any) {
           </div>
 
           {/* Column 3 & 4: Campuses (Transparent Style) */}
-          {contact?.locations?.map((loc: any, index: number) => (
+          {campuses?.locations?.map((loc: any, index: number) => (
             <div key={index} className="space-y-6">
               <h3 className="text-white text-sm font-bold uppercase tracking-widest mb-2 flex items-center">
                 <span className="w-8 h-[1px] bg-blue-500 mr-2"></span>

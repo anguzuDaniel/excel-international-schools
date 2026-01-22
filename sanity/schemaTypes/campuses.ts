@@ -1,7 +1,7 @@
 export default {
-  name: 'campuses', // Changed from 'contact'
+  name: 'campuses',
   type: 'document',
-  title: 'School Campuses', // More descriptive title for the sidebar
+  title: 'School Campuses',
   fields: [
     {
       name: 'locations',
@@ -44,7 +44,17 @@ export default {
               type: 'text',
               title: 'Brief Description',
               description: 'A short paragraph about this specific campus.'
-            }
+            },
+            {
+              name: 'slug',
+              type: 'slug',
+              title: 'URL Slug',
+              options: {
+                source: 'campusName', // Automatically generates from the name
+                maxLength: 96,
+              },
+              validation: (Rule: any) => Rule.required(),
+            },
           ],
           // This part makes the Sanity Studio look organized
           preview: {

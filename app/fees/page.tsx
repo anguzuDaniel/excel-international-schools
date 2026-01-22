@@ -13,10 +13,22 @@ export default async function FeesPage() {
       "pdfUrl": pdfDownload.asset->url
     },
     "aboutData": *[_type == "aboutPage"][0],
-    "contact": *[_type == "contact"][0]
+    "campuses": *[_type == "campuses"][0]{
+      _id,
+      locations[]{
+        _key,
+        campusName,
+        image,        // Added to fetch the new image
+        description,  // Added to fetch the new text
+        address,
+        email,
+        phoneNumbers,
+        mapUrl 
+      }
+    }
   }`;
   
-  const { hero, fees, aboutData, contact } = await client.fetch(query);
+  const { hero, fees, aboutData, campuses } = await client.fetch(query);
 
   return (
     <SubPageLayout title="Fees Structure" subtitle="Academic Year 2026" heroImage={aboutData.hero?.backgroundImage} logo={hero.logo}>

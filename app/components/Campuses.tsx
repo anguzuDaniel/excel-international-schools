@@ -1,15 +1,19 @@
 import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CampusLocation {
   _key: string;
   campusName: string;
-  image?: any; // Sanity images are objects, not strings
+  image?: any;
   description?: string;
   address?: string;
   email?: string;
   phoneNumbers?: string[];
   mapUrl?: string;
+  slug?: {
+    current: string;
+  };
 }
 
 interface CampusesProps {
@@ -38,69 +42,67 @@ export default function Campuses({ campuses }: CampusesProps) {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {campuses.locations.map((branch) => (
-            <div 
-              key={branch._key} 
-              className="group relative bg-slate-50 border border-slate-200 rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:border-blue-300 transition-all duration-500"
-            >
-              {/* Branch Image */}
-              <div className="relative h-64 w-full bg-slate-200">
-                {branch.image ? (
-                  <Image 
-                    src={urlFor(branch.image).url()} 
-                    alt={branch.campusName}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
-                    <span className="text-4xl mb-2">🏫</span>
-                    <span className="text-xs font-bold uppercase tracking-widest">
-                      Coming Soon
+          {campuses.locations.map((branch) => {
+            // Determine the link path - fallback to '#' if slug is missing
+            const href = branch.slug?.current ? `/campus/${branch.slug.current}` : "#";
+
+            return (
+              <Link 
+                key={branch._key} 
+                href={href}
+                className="group relative bg-slate-50 border border-slate-200 rounded-[2.5rem] overflow-hidden hover:shadow-2xl hover:border-blue-300 transition-all duration-500 flex flex-col"
+              >
+                {/* Branch Image */}
+                <div className="relative h-64 w-full bg-slate-200 overflow-hidden">
+                  {branch.image ? (
+                    <Image 
+                      src={urlFor(branch.image).url()} 
+                      alt={branch.campusName}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                      <span className="text-4xl mb-2">🏫</span>
+                      <span className="text-xs font-bold uppercase tracking-widest">
+                        Coming Soon
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60"></div>
+                  
+                  <div className="absolute bottom-6 left-6">
+                    <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-lg">
+                      {branch.address || "International"}
                     </span>
                   </div>
-                )}
-                
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60"></div>
-                
-                {/* Badge showing the Address */}
-                <div className="absolute bottom-6 left-6">
-                  <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-lg">
-                    {branch.address || "International"}
-                  </span>
                 </div>
-              </div>
 
-              {/* Branch Content */}
-              <div className="p-8">
-                <h3 className="text-2xl font-bold mb-3 text-slate-900 group-hover:text-blue-600 transition-colors">
-                  {branch.campusName}
-                </h3>
-                
-                <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">
-                  {branch.description || 
-                    "Providing excellence in education and character development at our state-of-the-art facility."}
-                </p>
-                
-                <div className="flex flex-col gap-4">
-                  {branch.mapUrl && (
-                    <a 
-                      href={branch.mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-blue-600 font-bold text-sm hover:underline transition-all"
-                    >
-                      <span>View on Google Maps</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </a>
-                  )}
+                {/* Branch Content */}
+                <div className="p-8 flex-grow flex flex-col">
+                  <h3 className="text-2xl font-bold mb-3 text-slate-900 group-hover:text-blue-600 transition-colors flex justify-between items-center">
+                    {branch.campusName}
+                    <span className="text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300">
+                      →
+                    </span>
+                  </h3>
+                  
+                  <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                    {branch.description || 
+                      "Providing excellence in education and character development at our state-of-the-art facility."}
+                  </p>
+                  
+                  <div className="mt-auto pt-4 border-t border-slate-100">
+                    <span className="text-blue-600 font-bold text-sm">
+                      View Campus Details
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </Link>
+            );
+          })}
+        </div>        
       </div>
     </section>
   );

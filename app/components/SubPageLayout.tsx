@@ -17,12 +17,25 @@ export default async function SubPageLayout({ title, subtitle, heroImage, logo, 
   // Common data needed for every subpage (Header/Footer info)
   const commonQuery = `{
     "hero": *[_type == "hero"][0],
-    "contact": *[_type == "contact"][0]
+    "campuses": *[_type == "campuses"][0]{ // Changed from "campuses"
+      _id,
+      locations[]{
+        _key,
+        campusName,
+        image,        // Added to fetch the new image
+        description,  // Added to fetch the new text
+        address,
+        email,
+        phoneNumbers,
+        mapUrl 
+      }
+    }
   }`;
   
-  const { hero, contact } = await client.fetch(commonQuery);
+  const data = await client.fetch(commonQuery);
+  const { hero, campuses } = data;
 
-  console.log(hero);
+  console.log("Campuses:", campuses);
 
   return (
     <div className="bg-white min-h-screen flex flex-col">
@@ -62,7 +75,7 @@ export default async function SubPageLayout({ title, subtitle, heroImage, logo, 
         </div>
       </main>
 
-      <Footer contact={contact} />
+      <Footer campuses={campuses} />
     </div>
   );
 }
