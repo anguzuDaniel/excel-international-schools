@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "createdAt": "2026-01-22T10:28:20.275Z",
+  "workspaces": [
+    {
+      "name": "default",
+      "title": "Default",
+      "basePath": "/studio",
+      "projectId": "drtpvgt7",
+      "dataset": "production",
+      "icon": null,
+      "mediaLibrary": {
+        "enabled": false
+      },
+      "schema": "b46afda2.create-schema.json",
+      "tools": "d8640c31.create-tools.json"
+    }
+  ],
+  "studioVersion": "5.5.0"
+}

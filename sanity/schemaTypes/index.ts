@@ -7,10 +7,11 @@ import section from './section'
 import about from './about'
 import curriculum from './curriculum'
 import stats from './stats'
-import contact from './contact'
+
 import application from './application'
 import fees from './fees'
 import aboutPage from './aboutPage'
+import campuses from './campuses'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -25,6 +26,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     section,
     missionVission,
     adminMessage,
-    contact
+    campuses
   ],
 }

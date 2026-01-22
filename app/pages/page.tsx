@@ -9,9 +9,9 @@ import AdminMessageSectionGrid from '../components/AdminMessageSectionGrid';
 import AdminMessage from '../components/AdminMessage';
 import { urlFor } from '@/sanity/lib/image';
 import { client } from '@/sanity/lib/client';
-import contact from '@/sanity/schemaTypes/contact';
 import Curriculum from '../components/Curriculum';
 import MissionAndVision from '../components/MissionAndVision';
+import Campuses from '../components/Campuses';
 
 interface HomePageProps {
   hero?: SanityHero | null;
@@ -42,38 +42,41 @@ interface SanityAdminMessage {
 }
 
 export default async function App() {
-  const query = `{
-    "hero": *[_type == "hero"][0],
-    "about": *[_type == "about"][0],
-    "curriculum": *[_type == "curriculum"][0],
-    "gallery": *[_type == "gallery"][0]{
-      "images": images[].asset->url // This turns the references into an array of URL strings
+const query = `{
+  "hero": *[_type == "hero"][0],
+  "about": *[_type == "about"][0],
+  "curriculum": *[_type == "curriculum"][0],
+  "gallery": *[_type == "gallery"][0]{
+    "images": images[].asset->url 
+  },
+  "stats": *[_type == "stats"][0],
+  "missionVision": *[_type == "missionVision"][0],
+  "adminMessages": *[_type == "adminMessage"] | order(_createdAt asc) {
+      _id,
+      name,
+      role,
+      message,
+      image 
     },
-    "stats": *[_type == "stats"][0],
-    "missionVision": *[_type == "missionVision"][0],
-    "adminMessages": *[_type == "adminMessage"] | order(_createdAt asc) {
-        _id,
-        name,
-        role,
-        message,
-        image // Make sure this is explicitly included
-      },
-    "contact": *[_type == "contact"][0]{
-        _id,
-        locations[]{
-          campusName,
-          address,
-          email,
-          phoneNumbers,
-          mapUrl // <--- THIS IS THE KEY
-        }
+  "campuses": *[_type == "campuses"][0]{ // Changed from "contact"
+      _id,
+      locations[]{
+        _key,
+        campusName,
+        image,        // Added to fetch the new image
+        description,  // Added to fetch the new text
+        address,
+        email,
+        phoneNumbers,
+        mapUrl 
       }
-  }`;
+    }
+}`;
 
   const data = await client.fetch(query);
-  const { hero, about, curriculum, stats, missionVision, gallery, adminMessages, contact } = data;
+  const { hero, about, curriculum, stats, missionVision, gallery, adminMessages, campuses } = data;
 
-  console.log("Admin Meassages: ", adminMessages);
+  console.log("Campuses: ", campuses);
 
   return (
     <div className="bg-slate-50 min-h-screen">
@@ -133,6 +136,9 @@ export default async function App() {
             </AdminMessageSectionGrid>
           </Section>
 
+          {/* 4. OUR CAMPUSES SECTION */}
+          <Campuses campuses={campuses} />
+
           {/* Gallery & Contact Split (Side-by-Side looks better on wide screens) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 pt-10">
             <div>
@@ -151,7 +157,7 @@ export default async function App() {
         </div>
       </main>
 
-      <Footer contact={contact}/>
+      <Footer contact={campuses}/>
     </div>
   );
 }

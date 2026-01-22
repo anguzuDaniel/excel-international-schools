@@ -6,19 +6,32 @@ import Footer from '../components/Footer';
 import Image from 'next/image';
 import SubPageLayout from '../components/SubPageLayout';
 import MissionAndVision from '../components/MissionAndVision';
+import Campuses from '../components/Campuses';
 
 export default async function AboutPage() {
-  // We fetch both the about page content and contact info for the footer
+  // We fetch both the about page content and campuses info for the footer
   const query = `{
     "hero": *[_type == "hero"][0],
     "aboutData": *[_type == "aboutPage"][0],
     "missionVision": *[_type == "missionVision"][0],
-    "contact": *[_type == "contact"][0]
+    "campuses": *[_type == "campuses"][0]{
+      _id,
+      locations[]{
+        _key,
+        campusName,
+        image,        // Added to fetch the new image
+        description,  // Added to fetch the new text
+        address,
+        email,
+        phoneNumbers,
+        mapUrl 
+      }
+    }
   }`;
   
-  const { hero, aboutData, missionVision, contact } = await client.fetch(query);
+  const { hero, aboutData, missionVision, campuses } = await client.fetch(query);
 
-  console.log(aboutData);
+  console.log("Contact:");
 
   // SAFEGUARD: If the document is not found, show a helpful message instead of crashing
   if (!aboutData) {
@@ -31,7 +44,7 @@ export default async function AboutPage() {
             <p className="text-slate-500 mt-2">Please publish the "About Page" document in Sanity Studio.</p>
           </div>
         </div>
-        <Footer contact={contact} />
+        <Footer campuses={campuses} />
       </div>
     );
   }
@@ -107,6 +120,9 @@ export default async function AboutPage() {
             </div>
           </div>
         </section>
+
+        {/* 4. OUR CAMPUSES SECTION */}
+        <Campuses campuses={campuses} />
     </SubPageLayout>
   );
 }
