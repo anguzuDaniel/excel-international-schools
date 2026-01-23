@@ -86,7 +86,8 @@ export default function Header({ schoolName, logo } : { schoolName: string; logo
         </nav>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
+          suppressHydrationWarning 
           className={`md:hidden p-2 rounded-lg transition-colors ${
             scrolled ? 'text-slate-900 hover:bg-slate-100' : 'text-white hover:bg-white/10'
           }`} 

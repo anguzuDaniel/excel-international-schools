@@ -75,7 +75,7 @@ export default async function SubPageLayout({ title, subtitle, heroImage, logo, 
         </div>
       </main>
 
-      <Footer campuses={campuses} />
+      <Footer campuses={campuses} schoolName={hero?.title} />
     </div>
   );
 }

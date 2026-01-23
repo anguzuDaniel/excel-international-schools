@@ -22,8 +22,29 @@ export default {
             { 
               name: 'image', 
               type: 'image', 
-              title: 'Campus Image',
-              options: { hotspot: true } // Allows you to crop the image inside Sanity
+              title: 'Main Hero Image',
+              description: 'This is the large image at the top of the campus page.',
+              options: { hotspot: true } 
+            },
+            {
+              name: 'campusImages',
+              type: 'array',
+              title: 'Campus Gallery',
+              description: 'Additional photos of the campus facilities and student life.',
+              of: [
+                {
+                  type: 'image',
+                  options: { hotspot: true },
+                  fields: [
+                    {
+                      name: 'caption',
+                      type: 'string',
+                      title: 'Caption',
+                      description: 'Briefly describe this photo.'
+                    }
+                  ]
+                }
+              ]
             },
             { name: 'address', type: 'string', title: 'Physical Address' },
             { name: 'email', type: 'string', title: 'Contact Email' },
@@ -45,18 +66,17 @@ export default {
               title: 'Brief Description',
               description: 'A short paragraph about this specific campus.'
             },
-            {
+            {           
               name: 'slug',
               type: 'slug',
               title: 'URL Slug',
               options: {
-                source: 'campusName', // Automatically generates from the name
+                source: (doc, options) => options.parent.campusName,
                 maxLength: 96,
               },
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule) => Rule.required(),
             },
           ],
-          // This part makes the Sanity Studio look organized
           preview: {
             select: {
               title: 'campusName',

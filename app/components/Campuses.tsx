@@ -22,11 +22,11 @@ interface CampusesProps {
   };
 }
 
-export default function Campuses({ campuses }: CampusesProps) {
+export default function Campuses({ campuses, schoolName }: { campuses: { locations: CampusLocation[] }; schoolName: string }) {
   if (!campuses?.locations) return null;
 
   return (
-    <section className="py-24 bg-white text-slate-900 px-6 overflow-hidden">
+    <section>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
@@ -34,7 +34,7 @@ export default function Campuses({ campuses }: CampusesProps) {
               Our Campuses
             </h2>
             <p className="text-slate-500 mt-4 max-w-xl text-lg">
-              Excel SDA International operates across multiple branches, each providing a 
+              {schoolName} operates across multiple branches, each providing a 
               world-class learning environment tailored to our students' needs.
             </p>
           </div>
@@ -45,6 +45,7 @@ export default function Campuses({ campuses }: CampusesProps) {
           {campuses.locations.map((branch) => {
             // Determine the link path - fallback to '#' if slug is missing
             const href = branch.slug?.current ? `/campus/${branch.slug.current}` : "#";
+
 
             return (
               <Link 

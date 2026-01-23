@@ -63,6 +63,7 @@ const query = `{
       locations[]{
         _key,
         campusName,
+        slug,
         image,        // Added to fetch the new image
         description,  // Added to fetch the new text
         address,
@@ -137,7 +138,7 @@ const query = `{
           </Section>
 
           {/* 4. OUR CAMPUSES SECTION */}
-          <Campuses campuses={campuses} />
+          <Campuses campuses={campuses} schoolName={hero?.title || ''} />
 
           {/* Gallery & Contact Split (Side-by-Side looks better on wide screens) */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 pt-10">
@@ -157,7 +158,7 @@ const query = `{
         </div>
       </main>
 
-      <Footer campuses={campuses}/>
+      <Footer campuses={campuses} schoolName={hero?.title || ''}/>
     </div>
   );
 }

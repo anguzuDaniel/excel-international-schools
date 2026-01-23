@@ -19,6 +19,7 @@ export default async function AboutPage() {
       locations[]{
         _key,
         campusName,
+        slug,
         image,        // Added to fetch the new image
         description,  // Added to fetch the new text
         address,
@@ -44,7 +45,7 @@ export default async function AboutPage() {
             <p className="text-slate-500 mt-2">Please publish the "About Page" document in Sanity Studio.</p>
           </div>
         </div>
-        <Footer campuses={campuses} />
+        <Footer campuses={campuses} schoolName={hero.title} />
       </div>
     );
   }
@@ -122,7 +123,9 @@ export default async function AboutPage() {
         </section>
 
         {/* 4. OUR CAMPUSES SECTION */}
-        <Campuses campuses={campuses} />
+        <div className="py-24 px-6 bg-slate-50">
+          <Campuses campuses={campuses} schoolName={hero.title} />
+        </div>
     </SubPageLayout>
   );
 }
