@@ -71,7 +71,7 @@ export default {
               type: 'slug',
               title: 'URL Slug',
               options: {
-                source: (doc, options) => options.parent.campusName,
+                source: (_doc: any, options: { parent: { campusName: string } }) => options.parent.campusName,
                 maxLength: 96,
               },
               validation: (Rule) => Rule.required(),
