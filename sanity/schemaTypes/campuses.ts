@@ -74,7 +74,7 @@ export default {
                 source: (_doc: any, options: { parent: { campusName: string } }) => options.parent.campusName,
                 maxLength: 96,
               },
-              validation: (Rule) => Rule.required(),
+              validation: (Rule: any) => Rule.required(),
             },
           ],
           preview: {
