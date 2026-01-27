@@ -13,6 +13,7 @@ import Curriculum from '../components/Curriculum';
 import MissionAndVision from '../components/MissionAndVision';
 import Campuses from '../components/Campuses';
 import Transition from '../components/Transition';
+import { Suspense } from 'react';
 
 export default async function App({ selectedCountry }: { selectedCountry: string }) {
   const activeCountryValue = selectedCountry === 'SS' ? 'south-sudan' : 'uganda';
@@ -87,6 +88,8 @@ export default async function App({ selectedCountry }: { selectedCountry: string
   const displayTitle = `${hero?.title || 'Excel International School'} - ${countryName}`;
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
+
     <div className="bg-slate-50 min-h-screen">
       {/* The Header should use the useSearchParams/useRouter hook to update the URL */}
       <Header schoolName={hero?.title} logo={hero?.logo} />
@@ -162,5 +165,6 @@ export default async function App({ selectedCountry }: { selectedCountry: string
       {/* Footer also receives filtered campuses for country-specific contact info */}
       <Footer campuses={filteredCampuses} schoolName={hero?.title || ''}/>
     </div>
+    </Suspense>
   );
 }

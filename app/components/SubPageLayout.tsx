@@ -3,7 +3,8 @@ import { urlFor } from '@/sanity/lib/image';
 import Header from './Header';
 import Footer from './Footer';
 import Image from 'next/image';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
+import LoadingScreen from './LoadingScreen';
 
 interface SubPageProps {
   title: string;
@@ -36,8 +37,10 @@ export default async function SubPageLayout({ title, subtitle, heroImage, logo, 
   const { hero, campuses } = data;
 
   return (
-    <div className="bg-white min-h-screen flex flex-col" suppressHydrationWarning>
-      <Header schoolName={hero?.title} logo={hero?.logo} />
+      <div className="bg-white min-h-screen flex flex-col" suppressHydrationWarning>
+      <Suspense fallback={<div className="h-20 bg-white" />}>
+        <Header schoolName={hero?.title} logo={hero?.logo} />
+      </Suspense>
 
       <main className="flex-grow">
         {/* REUSABLE HERO */}
