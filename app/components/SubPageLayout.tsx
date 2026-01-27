@@ -35,10 +35,8 @@ export default async function SubPageLayout({ title, subtitle, heroImage, logo, 
   const data = await client.fetch(commonQuery);
   const { hero, campuses } = data;
 
-  console.log("Campuses:", campuses);
-
   return (
-    <div className="bg-white min-h-screen flex flex-col">
+    <div className="bg-white min-h-screen flex flex-col" suppressHydrationWarning>
       <Header schoolName={hero?.title} logo={hero?.logo} />
 
       <main className="flex-grow">

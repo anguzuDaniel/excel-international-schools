@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 interface HeroProps {
     title: string;
     subtitle: string;
+    currentCountryCode: string;
     text: string;
     images?: string[];
     interval?: number;
@@ -16,6 +17,7 @@ export default function Hero({
     title,
     subtitle,
     text,
+    currentCountryCode,
     images = [],
     interval = 6000, // Slightly longer for better readability
 }: HeroProps) {
@@ -70,13 +72,11 @@ export default function Hero({
 
                 <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
                 {/* Primary Action: Link to Apply Page */}
-                <Link href="/apply">
-                    <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full font-bold transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2">
+                <Link href={`/apply?country=${currentCountryCode}`} className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full font-bold transition-all shadow-xl shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2">
                     Begin Application
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="out 17l5-5-5-5M19 12H5" />
                     </svg>
-                    </button>
                 </Link>
 
                 {/* Secondary Action: Virtual Tour */}

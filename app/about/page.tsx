@@ -8,7 +8,9 @@ import SubPageLayout from '../components/SubPageLayout';
 import MissionAndVision from '../components/MissionAndVision';
 import Campuses from '../components/Campuses';
 
-export default async function AboutPage() {
+export default async function AboutPage(
+  
+) {
   // We fetch both the about page content and campuses info for the footer
   const query = `{
     "hero": *[_type == "hero"][0],

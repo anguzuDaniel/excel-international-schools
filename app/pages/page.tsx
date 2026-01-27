@@ -14,18 +14,6 @@ import MissionAndVision from '../components/MissionAndVision';
 import Campuses from '../components/Campuses';
 import Transition from '../components/Transition';
 
-// --- Interfaces ---
-interface SanityHero {
-  title: string;
-  subtitle: string;
-  text: string;
-  logo: any;
-  images: { _key: string; asset: { _ref: string } }[];
-}
-
-/**
- * The main App component now accepts 'searchParams' from Next.js
- */
 export default async function App({ selectedCountry }: { selectedCountry: string }) {
   const activeCountryValue = selectedCountry === 'SS' ? 'south-sudan' : 'uganda';
   
@@ -44,7 +32,8 @@ export default async function App({ selectedCountry }: { selectedCountry: string
         name,
         role,
         message,
-        image 
+        image,
+        country
       },
     "campuses": *[_type == "campuses"][0]{
         _id,
@@ -77,11 +66,21 @@ export default async function App({ selectedCountry }: { selectedCountry: string
   console.log("Active Filter:", activeCountryValue);
   console.log("All Raw Campuses:", campuses?.locations?.map((l: any) => ({ name: l.campusName, country: l.country })));
   console.log("Filtered Result Count:", filteredLocations.length);
+  console.log("Admin Messages:", adminMessages);
 
   const filteredCampuses = {
     ...campuses,
     locations: filteredLocations
   };
+
+  const filteredAdminMessages = adminMessages?.filter(
+    (msg: any) => {
+      console.log("Current Msg:", msg.country);
+      return msg.country === activeCountryValue;
+    }
+  ) || [];
+
+  console.log("Filtered Admin Messages:", filteredAdminMessages);
 
   // 4. Content Customization (Dynamic Titles)
   const countryName = selectedCountry === 'SS' ? 'South Sudan' : 'Uganda';
@@ -99,6 +98,7 @@ export default async function App({ selectedCountry }: { selectedCountry: string
             title={displayTitle}
             subtitle={hero?.subtitle || ""}
             text={hero?.text || ""}
+            currentCountryCode={selectedCountry}
             images={hero?.images?.map((img: any) => urlFor(img).url()) || ['/images/school.jpg']}
           />
 
@@ -127,7 +127,7 @@ export default async function App({ selectedCountry }: { selectedCountry: string
             {/* ADMIN MESSAGES */}
             <Section title="Leadership Messages">
               <AdminMessageSectionGrid>
-                {adminMessages?.map((msg: any) => (
+                {filteredAdminMessages?.map((msg: any) => (
                   <AdminMessage
                     key={msg._id}
                     name={msg.name}
