@@ -1,9 +1,10 @@
 "use client";
 import { urlFor } from '@/sanity/lib/image';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation'; // Added these
 import { useState, useEffect } from 'react';
 
-// Define the SVG Flags for guaranteed visibility
+// Define the SVG Flags
 const FlagUganda = () => (
   <svg width="20" height="20" viewBox="0 0 512 512" className="rounded-full shadow-sm">
     <path fill="#000" d="M0 0h512v85.3H0zM0 341.3h512V426.7H0zM0 170.7h512v85.3H0z"/>
@@ -28,13 +29,26 @@ const FlagSouthSudan = () => (
 export default function Header({ schoolName, logo }: { schoolName: string; logo: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<'UG' | 'SS'>('UG');
+  
+  // Hooks for URL-based state
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Read current country from URL, default to 'UG'
+  const selectedCountry = searchParams.get('country') || 'UG';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Function to update URL when flag is clicked
+  const handleCountryChange = (code: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('country', code);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
 
   const countries = [
     { code: 'UG' as const, icon: <FlagUganda />, label: 'Uganda' },
@@ -46,7 +60,7 @@ export default function Header({ schoolName, logo }: { schoolName: string; logo:
       <div className="container mx-auto flex justify-between items-center px-6">
         
         {/* Brand */}
-        <div className="flex items-center group cursor-pointer">
+        <div className="flex items-center group cursor-pointer" onClick={() => router.push('/')}>
           {logo && (
             <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
               <img src={urlFor(logo).url()} alt={schoolName} className="h-10 md:h-14 w-auto object-contain" />
@@ -68,7 +82,7 @@ export default function Header({ schoolName, logo }: { schoolName: string; logo:
             {countries.map((c) => (
               <button
                 key={c.code}
-                onClick={() => setSelectedCountry(c.code)}
+                onClick={() => handleCountryChange(c.code)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-300 ${
                   selectedCountry === c.code ? 'bg-white text-slate-900 shadow-md scale-105' : 'opacity-50 hover:opacity-100'
                 }`}
@@ -87,7 +101,7 @@ export default function Header({ schoolName, logo }: { schoolName: string; logo:
         {/* Mobile Toggle */}
         <div className="flex items-center gap-3 md:hidden">
           <button 
-            onClick={() => setSelectedCountry(selectedCountry === 'UG' ? 'SS' : 'UG')}
+            onClick={() => handleCountryChange(selectedCountry === 'UG' ? 'SS' : 'UG')}
             className={`w-11 h-11 rounded-full flex items-center justify-center border transition-all ${scrolled ? 'bg-slate-100 border-slate-200' : 'bg-white/10 border-white/20'}`}
           >
             {selectedCountry === 'UG' ? <FlagUganda /> : <FlagSouthSudan />}
