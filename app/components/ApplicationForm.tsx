@@ -105,14 +105,36 @@ export default function ApplicationForm({ schoolName, locations }: { schoolName:
 
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-bold text-slate-700 ml-1">Applying For</label>
-                        <select name="level" required className="bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500">
+                        <select 
+                            name="level" 
+                            required 
+                            className="bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-500 text-slate-900"
+                        >
                             <option value="">Select Level</option>
-                            <option value="S.1">S.1 (O-Level)</option>
-                            <option value="S.2">S.2 (O-Level)</option>
-                            <option value="S.3">S.3 (O-Level)</option>
-                            <option value="S.4">S.4 (O-Level)</option>
-                            <option value="S.5">S.5 (A-Level)</option>
-                            <option value="S.6">S.6 (A-Level)</option>
+                            
+                            {/* PRIMARY SCHOOL SECTION */}
+                            <optgroup label="Primary School" className="font-bold text-blue-600">
+                                <option value="P.1">P.1 (Primary One)</option>
+                                <option value="P.2">P.2 (Primary Two)</option>
+                                <option value="P.3">P.3 (Primary Three)</option>
+                                <option value="P.4">P.4 (Primary Four)</option>
+                                <option value="P.5">P.5 (Primary Five)</option>
+                                <option value="P.6">P.6 (Primary Six)</option>
+                                <option value="P.7">P.7 (Primary Seven)</option>
+                            </optgroup>
+
+                            {/* SECONDARY SCHOOL SECTION */}
+                            <optgroup label="Secondary School (O-Level)" className="font-bold text-blue-600">
+                                <option value="S.1">S.1 (Senior One)</option>
+                                <option value="S.2">S.2 (Senior Two)</option>
+                                <option value="S.3">S.3 (Senior Three)</option>
+                                <option value="S.4">S.4 (Senior Four)</option>
+                            </optgroup>
+
+                            <optgroup label="Secondary School (A-Level)" className="font-bold text-blue-600">
+                                <option value="S.5">S.5 (Senior Five)</option>
+                                <option value="S.6">S.6 (Senior Six)</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
