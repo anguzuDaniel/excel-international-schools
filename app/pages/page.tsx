@@ -13,115 +13,115 @@ import Curriculum from '../components/Curriculum';
 import MissionAndVision from '../components/MissionAndVision';
 import Campuses from '../components/Campuses';
 
-interface HomePageProps {
-  hero?: SanityHero | null;
-  about?: SanitySection | null;
-  curriculum?: SanitySection | null;
-  mission?: SanitySection | null;
-  vision?: SanitySection | null;
-  adminMessages?: SanityAdminMessage[];
-}
-
+// --- Interfaces ---
 interface SanityHero {
   title: string;
   subtitle: string;
   text: string;
+  logo: any;
   images: { _key: string; asset: { _ref: string } }[];
 }
 
-interface SanitySection {
-  content: string;
-}
+/**
+ * The main App component now accepts 'searchParams' from Next.js
+ */
+export default async function App(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = await props.searchParams;
+  const countryCode = (searchParams?.country as string) || 'UG';
+  
+  // 2. Mapping URL codes
+  const activeCountryValue = countryCode === 'SS' ? 'south-sudan' : 'uganda';
 
-interface SanityAdminMessage {
-  _id: string;
-  name: string;
-  role: string;
-  message: string;
-  image?: any;
-}
-
-export default async function App() {
-const query = `{
-  "hero": *[_type == "hero"][0],
-  "about": *[_type == "about"][0],
-  "curriculum": *[_type == "curriculum"][0],
-  "gallery": *[_type == "gallery"][0]{
-    "images": images[].asset->url 
-  },
-  "stats": *[_type == "stats"][0],
-  "missionVision": *[_type == "missionVision"][0],
-  "adminMessages": *[_type == "adminMessage"] | order(_createdAt asc) {
-      _id,
-      name,
-      role,
-      message,
-      image 
+  // 2. Optimized GROQ Query
+  const query = `{
+    "hero": *[_type == "hero"][0],
+    "about": *[_type == "about"][0],
+    "curriculum": *[_type == "curriculum"][0],
+    "gallery": *[_type == "gallery"][0]{
+      "images": images[].asset->url 
     },
-  "campuses": *[_type == "campuses"][0]{ // Changed from "contact"
-      _id,
-      locations[]{
-        _key,
-        campusName,
-        slug,
-        image,        // Added to fetch the new image
-        description,  // Added to fetch the new text
-        address,
-        email,
-        phoneNumbers,
-        mapUrl 
+    "stats": *[_type == "stats"][0],
+    "missionVision": *[_type == "missionVision"][0],
+    "adminMessages": *[_type == "adminMessage"] | order(_createdAt asc) {
+        _id,
+        name,
+        role,
+        message,
+        image 
+      },
+    "campuses": *[_type == "campuses"][0]{
+        _id,
+        locations[]{
+          _key,
+          campusName,
+          slug,
+          image,
+          description,
+          country,
+          address,
+          email,
+          phoneNumbers,
+          mapUrl 
+        }
       }
-    }
-}`;
+  }`;
 
   const data = await client.fetch(query);
   const { hero, about, curriculum, stats, missionVision, gallery, adminMessages, campuses } = data;
 
-  console.log("Campuses: ", campuses);
+  // 3. FILTERING: Only show content belonging to the selected country
+  const filteredLocations = campuses?.locations?.filter(
+    (loc: any) => loc.country === activeCountryValue
+  ) || [];
+
+  const filteredCampuses = {
+    ...campuses,
+    locations: filteredLocations
+  };
+
+  // 4. Content Customization (Dynamic Titles)
+  const countryName = countryCode === 'SS' ? 'South Sudan' : 'Uganda';
+  const displayTitle = `${hero?.title || 'Excel International School'} - ${countryName}`;
 
   return (
     <div className="bg-slate-50 min-h-screen">
-      <Header schoolName={hero.title} logo={hero?.logo} />
+      {/* The Header should use the useSearchParams/useRouter hook to update the URL */}
+      <Header schoolName={hero?.title} logo={hero?.logo} />
 
       <main>
-        {/* FULL WIDTH: Hero */}
+        {/* HERO: Now shows the specific country name */}
         <Hero
-          title={hero?.title || ""}
+          title={displayTitle}
           subtitle={hero?.subtitle || ""}
           text={hero?.text || ""}
           images={hero?.images?.map((img: any) => urlFor(img).url()) || ['/images/school.jpg']}
         />
 
-        {/* CONTAINER: About & Mission (Vertical Padding for breathing room) */}
+        {/* CONTAINER: About & Mission */}
         <div className="max-w-7xl mx-auto px-6 py-20 space-y-24">
-          
-          {/* About Section */}
           <Section title={about?.title || "About Us"}>
-            <div>
-              <p className="text-lg text-slate-600 leading-relaxed">
-                {about?.content || ''}
-              </p>
-            </div>
+            <p className="text-lg text-slate-600 leading-relaxed">
+              {about?.content || ''}
+            </p>
           </Section>
 
-          {/* Mission & Vision Section */}
           <MissionAndVision mission={missionVision?.mission} vision={missionVision?.vision} />
         </div>
 
-        {/* FULL WIDTH: Statistics (Breaking the container for visual impact) */}
+        {/* STATS: Full Width */}
         <div className="bg-blue-900 shadow-inner">
           <Stats items={stats?.statItems || []} />
         </div>
 
-        {/* CONTAINER: Academic & Leadership */}
         <div className="max-w-7xl mx-auto px-6 py-20 space-y-32">
-          
-          {/* Curriculum Section */}
+          {/* CURRICULUM */}
           <Section title={curriculum?.title || "Academic Curriculum"}>
             <Curriculum curriculum={curriculum} />
           </Section>
 
-          {/* Admin Messages Section */}
+          {/* ADMIN MESSAGES */}
           <Section title="Leadership Messages">
             <AdminMessageSectionGrid>
               {adminMessages?.map((msg: any) => (
@@ -130,25 +130,22 @@ const query = `{
                   name={msg.name}
                   role={msg.role}
                   message={msg.message}
-                  // This check ensures we only call urlFor if there is an actual asset
                   image={msg.image?.asset ? urlFor(msg.image).url() : '/images/default-admin.jpg'}
                 />
               ))}
             </AdminMessageSectionGrid>
           </Section>
 
-          {/* 4. OUR CAMPUSES SECTION */}
-          <Campuses campuses={campuses} schoolName={hero?.title || ''} />
+          {/* CAMPUSES: Filtered based on country selection */}
+          <Campuses campuses={filteredCampuses} schoolName={hero?.title || ''} />
 
-          {/* Gallery & Contact Split (Side-by-Side looks better on wide screens) */}
+          {/* GALLERY & CONTACT */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 pt-10">
             <div>
               <h2 className="text-4xl font-extrabold mb-8 text-slate-900 tracking-tight">Gallery</h2>
               <Gallery 
-                  images={gallery?.images?.map((img: any) => ({
-                    src: urlFor(img).url() // This maps the Sanity asset to the 'src' key your component expects
-                  })) || []} 
-                />
+                images={gallery?.images?.map((url: string) => ({ src: url })) || []} 
+              />
             </div>
             <div>
               <h2 className="text-4xl font-extrabold mb-8 text-slate-900 tracking-tight">Get in Touch</h2>
@@ -158,7 +155,8 @@ const query = `{
         </div>
       </main>
 
-      <Footer campuses={campuses} schoolName={hero?.title || ''}/>
+      {/* Footer also receives filtered campuses for country-specific contact info */}
+      <Footer campuses={filteredCampuses} schoolName={hero?.title || ''}/>
     </div>
   );
 }
